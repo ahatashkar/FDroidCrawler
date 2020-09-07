@@ -1,0 +1,5 @@
+venv/
+scraper.py
+test.json
+.idea/
+__pycache__/

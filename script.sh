@@ -1,5 +1,5 @@
 #!/bin/bash
 source venv/bin/activate
-#scrapy runspider fdroid.py -o test.json
+scrapy runspider fdroid.py -o test.json
 unzip 'Projects/*' -d Projects/Unzip
-python TestFinder.py
+python TestFinder.py > result.txt

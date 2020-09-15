@@ -12,7 +12,7 @@ def analyze(dir):
             analyze(current)
 
         elif os.path.isfile(current):
-            if '.java' in current:
+            if '.java' in current or '.kt' in current:
                 datafile = open(current)
                 lines = datafile.readlines()
                 for line in lines:

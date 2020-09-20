@@ -1,11 +1,18 @@
 import os
 
-count = 0
-has_test = 0
+junit_count = 0
+espresso_count = 0
+
+total_test = 0
+total_junit = 0
+total_espresso = 0
+
 
 
 def analyze(dir):
-    global count
+    global junit_count
+    global espresso_count
+
     for each in os.listdir(dir):
         current = os.path.join(dir, each)
         if os.path.isdir(current):
@@ -16,9 +23,13 @@ def analyze(dir):
                 datafile = open(current)
                 lines = datafile.readlines()
                 for line in lines:
-                    if 'import org.junit.Test' in line:
+                    if 'import static androidx.test.espresso' in line:
                         # print(current)
-                        count = count + 1
+                        # junit_count = junit_count + 1
+                        espresso_count = 1
+
+                    if 'import org.junit.Test' in line:
+                        junit_count = 1
 
 
 root = os.getcwd() + '/Projects/Unzip'
@@ -28,13 +39,21 @@ for directory in os.listdir(root):
     current_dir = os.path.join(root, directory)
     if os.path.isdir(current_dir):
         os.chdir(current_dir)
-        count = 0
+        junit_count = 0
+        espresso_count = 0
         analyze('.')
-        if count > 0:
-            has_test = has_test + 1
-        print(directory + ' : ' + str(count))
+        if junit_count > 0 or espresso_count > 0:
+            total_test = total_test + 1
+        if junit_count > 0:
+            total_junit = total_junit + 1
+        if espresso_count > 0:
+            total_espresso = total_espresso + 1
+
+        print(directory + ' : ' + str(junit_count) + ' , ' + str(espresso_count))
 
 print('----------------------------')
 print('total projects: ' + str(total))
-print('projects have test: ' + str(has_test))
-print('percentage: ' + str((has_test/total)*100))
+print('total test: ' + str(total_test))
+print('total junit: ' + str(total_junit))
+print('total espresso: ' + str(total_espresso))
+print('percentage: ' + str((total_test/total)*100))

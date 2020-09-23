@@ -1,17 +1,18 @@
 import os
 
-junit_count = 0
-espresso_count = 0
+has_junit = 0
+has_espresso = 0
+
+count_junit = 0
+count_espresso = 0
 
 total_test = 0
 total_junit = 0
 total_espresso = 0
 
 
-
 def analyze(dir):
-    global junit_count
-    global espresso_count
+    global has_junit, has_espresso, count_espresso, count_junit
 
     for each in os.listdir(dir):
         current = os.path.join(dir, each)
@@ -22,14 +23,46 @@ def analyze(dir):
             if '.java' in current or '.kt' in current:
                 datafile = open(current)
                 lines = datafile.readlines()
-                for line in lines:
-                    if 'import static androidx.test.espresso' in line:
-                        # print(current)
-                        # junit_count = junit_count + 1
-                        espresso_count = 1
 
-                    if 'import org.junit.Test' in line:
-                        junit_count = 1
+                for line in lines:
+                    if 'org.junit.Test' in line:
+                        espresso_flag = False
+                        for temp_line in lines:
+                            if 'androidx.test.espresso' in temp_line \
+                                    or 'android.support.test.espresso' in temp_line:
+                                has_espresso = 1
+                                espresso_flag = True
+
+                                for temp in lines:
+                                    if '@Test' in temp:
+                                        count_espresso = count_espresso + 1
+
+                                break
+
+                        if not espresso_flag:
+                            has_junit = 1
+
+                            for temp in lines:
+                                if '@Test' in temp:
+                                    count_junit = count_junit + 1
+
+
+                    # if 'androidx.test.espresso' in line \
+                    #         or 'android.support.test.espresso' in line:
+                    #     has_espresso = 1
+                    #
+                    #     for temp_line in lines:
+                    #         if '@Test' in temp_line:
+                    #             count_espresso = count_espresso + 1
+                    #
+                    #     break
+                    #
+                    # elif 'org.junit.Test' in line:
+                    #     has_junit = 1
+                    #
+                    #     for temp_line in lines:
+                    #         if '@Test' in temp_line:
+                    #             count_junit = count_junit + 1
 
 
 root = os.getcwd() + '/Projects/Unzip'
@@ -39,21 +72,24 @@ for directory in os.listdir(root):
     current_dir = os.path.join(root, directory)
     if os.path.isdir(current_dir):
         os.chdir(current_dir)
-        junit_count = 0
-        espresso_count = 0
+
+        has_junit = 0
+        has_espresso = 0
+        count_espresso = 0
+        count_junit = 0
+
         analyze('.')
-        if junit_count > 0 or espresso_count > 0:
+        if has_junit > 0 or has_espresso > 0:
             total_test = total_test + 1
-        if junit_count > 0:
+        if has_junit > 0:
             total_junit = total_junit + 1
-        if espresso_count > 0:
+        if has_espresso > 0:
             total_espresso = total_espresso + 1
 
-        print(directory + ' : ' + str(junit_count) + ' , ' + str(espresso_count))
+        print(directory + ' : ' + str(has_junit) + ' , ' + str(has_espresso) + ' , ' + str(count_junit) + ' , ' + str(count_espresso))
 
 print('----------------------------')
 print('total projects: ' + str(total))
 print('total test: ' + str(total_test))
 print('total junit: ' + str(total_junit))
 print('total espresso: ' + str(total_espresso))
-print('percentage: ' + str((total_test/total)*100))

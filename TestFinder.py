@@ -18,7 +18,7 @@ lines_test = 0
 
 
 def analyze(dir):
-    global has_junit, has_espresso, count_espresso, count_junit, lines_test, lines_code
+    global has_junit, has_espresso, count_espresso, count_junit, lines_test, lines_code, has_robolectric, count_robolectric
 
     for each in os.listdir(dir):
         current = os.path.join(dir, each)
@@ -62,6 +62,15 @@ def analyze(dir):
 
                                 break
 
+                            if 'org.robolectric.Robolectric' in temp_line:
+                                has_robolectric = 1
+
+                                for temp in lines:
+                                    if '@Test' in temp:
+                                        count_robolectric = count_robolectric + 1
+
+                                break
+
                         if not espresso_flag:
                             has_junit = 1
 
@@ -75,7 +84,8 @@ def analyze(dir):
 
 root = os.getcwd() + '/Projects/Unzip'
 total = os.listdir(root).__len__()
-print("Project,has_junit,has_espresso,count_junit,count_espresso,lines_code,lines_test")
+print("Project,has_junit,has_espresso,has_robolectric,count_junit,count_espresso,count_robolectric,lines_code,"
+      "lines_test")
 for directory in os.listdir(root):
     os.chdir(root)
     current_dir = os.path.join(root, directory)
@@ -84,8 +94,10 @@ for directory in os.listdir(root):
 
         has_junit = 0
         has_espresso = 0
+        has_robolectric = 0
         count_espresso = 0
         count_junit = 0
+        count_robolectric = 0
         lines_code = 0
         lines_test = 0
 
@@ -96,12 +108,16 @@ for directory in os.listdir(root):
             total_junit = total_junit + 1
         if has_espresso > 0:
             total_espresso = total_espresso + 1
+        if has_robolectric > 0:
+            total_robolectric = total_robolectric + 1
 
         print(directory + ',' +
               str(has_junit) + ',' +
               str(has_espresso) + ',' +
+              str(has_robolectric) + ',' +
               str(count_junit) + ',' +
               str(count_espresso) + ',' +
+              str(count_robolectric) + ',' +
               str(lines_code) + ',' +
               str(lines_test))
 
@@ -110,3 +126,4 @@ print('total projects: ' + str(total))
 print('total test: ' + str(total_test))
 print('total junit: ' + str(total_junit))
 print('total espresso: ' + str(total_espresso))
+print('total robolectric: ' + str(total_robolectric))

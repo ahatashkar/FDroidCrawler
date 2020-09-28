@@ -2,13 +2,16 @@ import os
 
 has_junit = 0
 has_espresso = 0
+has_robolectric = 0
 
 count_junit = 0
 count_espresso = 0
+count_robolectric = 0
 
 total_test = 0
 total_junit = 0
 total_espresso = 0
+total_robolectric = 0
 
 lines_code = 0
 lines_test = 0
@@ -72,7 +75,7 @@ def analyze(dir):
 
 root = os.getcwd() + '/Projects/Unzip'
 total = os.listdir(root).__len__()
-print("Project;has_junit;has_espresso;count_junit;count_espresso;lines_code;lines_test")
+print("Project,has_junit,has_espresso,count_junit,count_espresso,lines_code,lines_test")
 for directory in os.listdir(root):
     os.chdir(root)
     current_dir = os.path.join(root, directory)
@@ -94,12 +97,12 @@ for directory in os.listdir(root):
         if has_espresso > 0:
             total_espresso = total_espresso + 1
 
-        print(directory + ' ; ' +
-              str(has_junit) + ' ; ' +
-              str(has_espresso) + ' ; ' +
-              str(count_junit) + ' ; ' +
-              str(count_espresso) + ' ; ' +
-              str(lines_code) + ' ; ' +
+        print(directory + ',' +
+              str(has_junit) + ',' +
+              str(has_espresso) + ',' +
+              str(count_junit) + ',' +
+              str(count_espresso) + ',' +
+              str(lines_code) + ',' +
               str(lines_test))
 
 print('----------------------------')

@@ -48,13 +48,13 @@ def analyze(dir):
                     if 'org.junit.Test' in line:
                         has_test_flag = True
                         lines_test = lines_test + temp_lines.__len__()
-                        espresso_flag = False
+                        junit_flag = True
 
                         for temp_line in lines:
                             if 'androidx.test.espresso' in temp_line \
                                     or 'android.support.test.espresso' in temp_line:
                                 has_espresso = 1
-                                espresso_flag = True
+                                junit_flag = False
 
                                 for temp in lines:
                                     if '@Test' in temp:
@@ -62,8 +62,9 @@ def analyze(dir):
 
                                 break
 
-                            if 'org.robolectric.Robolectric' in temp_line:
+                            elif 'org.robolectric.Robolectric' in temp_line:
                                 has_robolectric = 1
+                                junit_flag = False
 
                                 for temp in lines:
                                     if '@Test' in temp:
@@ -71,7 +72,7 @@ def analyze(dir):
 
                                 break
 
-                        if not espresso_flag:
+                        if junit_flag:
                             has_junit = 1
 
                             for temp in lines:

@@ -27,7 +27,7 @@ def analyze(dir):
 
         elif os.path.isfile(current):
             if '.java' in current or '.kt' in current:
-                datafile = open(current)
+                datafile = open(current, encoding='latin-1')
                 lines = datafile.readlines()
 
                 temp_lines = []

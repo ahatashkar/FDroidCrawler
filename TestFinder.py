@@ -8,10 +8,22 @@ count_junit = 0
 count_espresso = 0
 count_robolectric = 0
 
+total_count_junit = 0
+total_count_espresso = 0
+total_count_robolectric = 0
+
 total_test = 0
 total_junit = 0
 total_espresso = 0
 total_robolectric = 0
+
+only_junit = 0
+only_espresso = 0
+only_robolectric = 0
+
+junit_espresso = 0
+junit_robolectric = 0
+espresso_robolectric = 0
 
 lines_code = 0
 lines_test = 0
@@ -103,14 +115,33 @@ for directory in os.listdir(root):
         lines_test = 0
 
         analyze('.')
-        if has_junit > 0 or has_espresso > 0:
+        if has_junit > 0 or has_espresso > 0 or has_robolectric > 0:
             total_test = total_test + 1
+
         if has_junit > 0:
             total_junit = total_junit + 1
         if has_espresso > 0:
             total_espresso = total_espresso + 1
         if has_robolectric > 0:
             total_robolectric = total_robolectric + 1
+
+        if has_junit > 0 and has_espresso == 0 and has_robolectric == 0:
+            only_junit = only_junit + 1
+        if has_junit == 0 and has_espresso > 0 and has_robolectric == 0:
+            only_espresso = only_espresso + 1
+        if has_junit == 0 and has_espresso == 0 and has_robolectric > 0:
+            only_robolectric = only_robolectric + 1
+
+        if has_junit > 0 and has_espresso > 0 and has_robolectric == 0:
+            junit_espresso = junit_espresso + 1
+        if has_junit > 0 and has_espresso == 0 and has_robolectric > 0:
+            junit_robolectric = junit_robolectric + 1
+        if has_junit == 0 and has_espresso > 0 and has_robolectric > 0:
+            espresso_robolectric = espresso_robolectric + 1
+
+        total_count_junit = total_count_junit + count_junit
+        total_count_espresso = total_count_espresso + count_espresso
+        total_count_robolectric = total_count_robolectric + count_robolectric
 
         print(directory + ',' +
               str(has_junit) + ',' +
@@ -128,3 +159,12 @@ print('total test: ' + str(total_test))
 print('total junit: ' + str(total_junit))
 print('total espresso: ' + str(total_espresso))
 print('total robolectric: ' + str(total_robolectric))
+print('only junit: ' + str(only_junit))
+print('only espresso: ' + str(only_espresso))
+print('only robolectric: ' + str(only_robolectric))
+print('junit & espresso: ' + str(junit_espresso))
+print('junit & robolectric: ' + str(junit_robolectric))
+print('espresso & robolectric: ' + str(espresso_robolectric))
+print('total count junit: ' + str(total_count_junit))
+print('total count espresso: ' + str(total_count_espresso))
+print('total count robolectric: ' + str(total_count_robolectric))

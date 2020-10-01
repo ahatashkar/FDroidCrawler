@@ -4,7 +4,8 @@ import os
 
 class FDroid(scrapy.Spider):
     name = "fdroid"
-    start_urls = ['https://f-droid.org/en/categories/graphics/']
+    start_urls = ['https://f-droid.org/en/categories/sports-health/']
+    download_timeout = 1000
 
     def parse(self, response):
 

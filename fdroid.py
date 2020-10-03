@@ -1,10 +1,12 @@
 import scrapy
 import os
+import re
+import datetime
 
 
 class FDroid(scrapy.Spider):
     name = "fdroid"
-    start_urls = ['https://f-droid.org/en/categories/sports-health/']
+    start_urls = ['https://f-droid.org/en/categories/graphics/']
     download_timeout = 1000
 
     def parse(self, response):
@@ -20,6 +22,22 @@ class FDroid(scrapy.Spider):
             yield scrapy.Request(link, callback=self.parse_page)
 
     def parse_page(self, response):
+
+        date_list = response.css('.package-version-header::text').getall()
+        release_date = ""
+        for date in date_list:
+            if "Added" in date:
+                release_date = date
+                break
+
+        temp = re.split("\s", release_date)
+        for item in temp:
+            try:
+                if datetime.datetime.strptime(item, '%Y-%m-%d'):
+                    release_date = item
+            except ValueError:
+                continue
+
         source_code = ""
         for link in response.css('.package-link'):
             if link.css('a::text').get() == 'Source Code':
@@ -28,9 +46,10 @@ class FDroid(scrapy.Spider):
         if "github" in source_code:
             yield {
                 'link': response.request.url,
-                'source': source_code
+                # 'source': source_code,
+                'date': release_date
             }
-            yield scrapy.Request(response.urljoin(source_code + "/archive/master.zip"), callback=self.save_project)
+            # yield scrapy.Request(response.urljoin(source_code + "/archive/master.zip"), callback=self.save_project)
 
     def save_project(self, response):
         if not os.path.exists('Projects'):

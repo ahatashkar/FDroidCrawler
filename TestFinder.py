@@ -102,6 +102,23 @@ print("Project,has_junit,has_espresso,has_robolectric,count_junit,count_espresso
 for directory in os.listdir(root):
     os.chdir(root)
     current_dir = os.path.join(root, directory)
+
+    datafile = open('../../test.json', encoding='latin-1')
+    lines = datafile.readlines()
+    app_name = directory.replace('-', '').replace('master', '').lower()
+    release_date = ""
+    for line in lines:
+        try:
+            temp_line = line.lower().replace(' ', '').split(',')[0].split(':')[1].replace('"', "")
+            if app_name in temp_line or temp_line in app_name:
+                release_date = line.split(':')[2].replace('}', "").replace('"', "").split('-')[0].strip()
+                break
+        except:
+            continue
+
+
+
+
     if os.path.isdir(current_dir):
         os.chdir(current_dir)
 

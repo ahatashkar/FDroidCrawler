@@ -23,6 +23,9 @@ class FDroid(scrapy.Spider):
 
     def parse_page(self, response):
 
+        app_name = response.css('.package-name::text')[0].get()
+        app_name = app_name.strip()
+
         date_list = response.css('.package-version-header::text').getall()
         release_date = ""
         for date in date_list:
@@ -45,7 +48,8 @@ class FDroid(scrapy.Spider):
 
         if "github" in source_code:
             yield {
-                'link': response.request.url,
+                'name': app_name,
+                # 'link': response.request.url,
                 # 'source': source_code,
                 'date': release_date
             }

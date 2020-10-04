@@ -97,7 +97,7 @@ def analyze(dir):
 
 root = os.getcwd() + '/Projects/Unzip'
 total = os.listdir(root).__len__()
-print("Project,has_junit,has_espresso,has_robolectric,count_junit,count_espresso,count_robolectric,lines_code,"
+print("Project,release_date,has_junit,has_espresso,has_robolectric,count_junit,count_espresso,count_robolectric,lines_code,"
       "lines_test")
 for directory in os.listdir(root):
     os.chdir(root)
@@ -109,9 +109,11 @@ for directory in os.listdir(root):
     release_date = ""
     for line in lines:
         try:
-            temp_line = line.lower().replace(' ', '').split(',')[0].split(':')[1].replace('"', "")
+
+            temp_line = line.lower().split(',')[0].split('/')[-1].replace('-', '').replace(' ', '')
             if app_name in temp_line or temp_line in app_name:
-                release_date = line.split(':')[2].replace('}', "").replace('"', "").split('-')[0].strip()
+                release_date = line.split(',')[1].split(':')[1].replace('"', '').replace('}', '').replace('\n', '')
+                release_date = release_date.split('-')[0]
                 break
         except:
             continue
@@ -161,6 +163,7 @@ for directory in os.listdir(root):
         total_count_robolectric = total_count_robolectric + count_robolectric
 
         print(directory + ',' +
+              release_date + ',' +
               str(has_junit) + ',' +
               str(has_espresso) + ',' +
               str(has_robolectric) + ',' +

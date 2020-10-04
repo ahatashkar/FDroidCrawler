@@ -48,9 +48,9 @@ class FDroid(scrapy.Spider):
 
         if "github" in source_code:
             yield {
-                'name': app_name,
+                # 'name': app_name,
                 # 'link': response.request.url,
-                # 'source': source_code,
+                'source': source_code,
                 'date': release_date
             }
             # yield scrapy.Request(response.urljoin(source_code + "/archive/master.zip"), callback=self.save_project)

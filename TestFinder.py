@@ -1,4 +1,5 @@
 import os
+import matplotlib.pyplot as plt
 
 has_junit = 0
 has_espresso = 0
@@ -27,6 +28,10 @@ espresso_robolectric = 0
 
 lines_code = 0
 lines_test = 0
+
+plot_junit = {}
+plot_espresso = {}
+plot_robolectric = {}
 
 
 def analyze(dir):
@@ -101,9 +106,8 @@ print("Project,release_date,has_junit,has_espresso,has_robolectric,count_junit,c
       "lines_test")
 for directory in os.listdir(root):
     os.chdir(root)
-    current_dir = os.path.join(root, directory)
 
-    datafile = open('../../test.json', encoding='latin-1')
+    datafile = open('../test.json', encoding='latin-1')
     lines = datafile.readlines()
     app_name = directory.replace('-', '').replace('master', '').lower()
     release_date = ""
@@ -118,8 +122,7 @@ for directory in os.listdir(root):
         except:
             continue
 
-
-
+    current_dir = os.path.join(root, directory)
 
     if os.path.isdir(current_dir):
         os.chdir(current_dir)
@@ -162,6 +165,22 @@ for directory in os.listdir(root):
         total_count_espresso = total_count_espresso + count_espresso
         total_count_robolectric = total_count_robolectric + count_robolectric
 
+        if release_date != "":
+            if plot_junit.get(release_date) is not None:
+                plot_junit[release_date] = plot_junit[release_date] + count_junit
+            else:
+                plot_junit[release_date] = count_junit
+
+            if plot_espresso.get(release_date) is not None:
+                plot_espresso[release_date] = plot_espresso[release_date] + count_espresso
+            else:
+                plot_espresso[release_date] = count_espresso
+
+            if plot_robolectric.get(release_date) is not None:
+                plot_robolectric[release_date] = plot_robolectric[release_date] + count_robolectric
+            else:
+                plot_robolectric[release_date] = count_robolectric
+
         print(directory + ',' +
               release_date + ',' +
               str(has_junit) + ',' +
@@ -188,3 +207,17 @@ print('espresso & robolectric: ' + str(espresso_robolectric))
 print('total count junit: ' + str(total_count_junit))
 print('total count espresso: ' + str(total_count_espresso))
 print('total count robolectric: ' + str(total_count_robolectric))
+
+plot_junit = sorted(plot_junit.items(), key=lambda t: t[0])
+x, y = zip(*plot_junit)
+plt.plot(x, y, label='junit')
+
+plot_espresso = sorted(plot_espresso.items(), key=lambda t: t[0])
+x, y = zip(*plot_espresso)
+plt.plot(x, y, label='espresso')
+
+plot_robolectric = sorted(plot_robolectric.items(), key=lambda t: t[0])
+x, y = zip(*plot_robolectric)
+plt.plot(x, y, label='robolectric')
+plt.legend(loc='best')
+plt.savefig(root+"/plot.jpg")

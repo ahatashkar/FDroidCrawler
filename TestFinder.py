@@ -101,13 +101,14 @@ def analyze(dir):
 
 
 root = os.getcwd() + '/Projects/Unzip'
+output_path = os.getcwd() + '/Projects/Output'
 total = os.listdir(root).__len__()
 print("Project,release_date,has_junit,has_espresso,has_robolectric,count_junit,count_espresso,count_robolectric,lines_code,"
       "lines_test")
 for directory in os.listdir(root):
     os.chdir(root)
 
-    datafile = open('../test.json', encoding='latin-1')
+    datafile = open(output_path+'/info.json', encoding='latin-1')
     lines = datafile.readlines()
     app_name = directory.replace('-', '').replace('master', '').lower()
     release_date = ""
@@ -220,4 +221,6 @@ plot_robolectric = sorted(plot_robolectric.items(), key=lambda t: t[0])
 x, y = zip(*plot_robolectric)
 plt.plot(x, y, label='robolectric')
 plt.legend(loc='best')
-plt.savefig(root+"/plot.jpg")
+plt.ylabel('Test cases')
+plt.xlabel('Years')
+plt.savefig(output_path+"/plot.jpg")

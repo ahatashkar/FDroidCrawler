@@ -1,5 +1,6 @@
 import os
 import matplotlib.pyplot as plt
+import json
 
 has_junit = 0
 has_espresso = 0
@@ -47,11 +48,15 @@ def analyze(dir):
                 datafile = open(current, encoding='latin-1')
                 lines = datafile.readlines()
 
+                lines_count = 0
+                # x = os.popen('cloc '+current+' --json')
+                # xx = x.read()
+                # d = json.loads(xx)
+                # lines_count = d['SUM']['code']
+
                 temp_lines = []
                 for line in lines:
-                    if line.lstrip().startswith("package") or \
-                            line.startswith("\n") or \
-                            line.lstrip().startswith("import") or \
+                    if line.startswith("\n") or \
                             line.lstrip().startswith('//') or \
                             line.lstrip().startswith("/*") or \
                             line.lstrip().startswith("*") or \
@@ -59,12 +64,13 @@ def analyze(dir):
                         continue
                     else:
                         temp_lines.append(line)
+                lines_count = temp_lines.__len__()
 
                 has_test_flag = False
                 for line in lines:
                     if 'org.junit.Test' in line:
                         has_test_flag = True
-                        lines_test = lines_test + temp_lines.__len__()
+                        lines_test = lines_test + lines_count
                         junit_flag = True
 
                         for temp_line in lines:
@@ -97,12 +103,13 @@ def analyze(dir):
                                     count_junit = count_junit + 1
 
                 if not has_test_flag:
-                    lines_code = lines_code + temp_lines.__len__()
+                    lines_code = lines_code + lines_count
 
 
 root = os.getcwd() + '/Projects/Unzip'
 output_path = os.getcwd() + '/Projects/Output'
-total = os.listdir(root).__len__()
+# total = os.listdir(root).__len__()
+total = 0
 print("Project,release_date,has_junit,has_espresso,has_robolectric,count_junit,count_espresso,count_robolectric,lines_code,"
       "lines_test")
 for directory in os.listdir(root):
@@ -138,6 +145,11 @@ for directory in os.listdir(root):
         lines_test = 0
 
         analyze('.')
+        if lines_code == 0:
+            continue
+
+        total = total + 1
+
         if has_junit > 0 or has_espresso > 0 or has_robolectric > 0:
             total_test = total_test + 1
 

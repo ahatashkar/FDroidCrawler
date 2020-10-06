@@ -1,4 +1,6 @@
 import os
+import sys
+
 import matplotlib.pyplot as plt
 import json
 
@@ -221,6 +223,9 @@ print('total count junit: ' + str(total_count_junit))
 print('total count espresso: ' + str(total_count_espresso))
 print('total count robolectric: ' + str(total_count_robolectric))
 
+arg = sys.argv[1]
+category_name = arg.split('/')[-2]
+
 plot_junit = sorted(plot_junit.items(), key=lambda t: t[0])
 x, y = zip(*plot_junit)
 plt.plot(x, y, label='junit')
@@ -235,4 +240,5 @@ plt.plot(x, y, label='robolectric')
 plt.legend(loc='best')
 plt.ylabel('Test cases')
 plt.xlabel('Years')
-plt.savefig(output_path+"/plot.jpg")
+plt.title(category_name)
+plt.savefig(output_path+"/plot_"+category_name+".jpg")

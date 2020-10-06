@@ -6,8 +6,11 @@ import datetime
 
 class FDroid(scrapy.Spider):
     name = "fdroid"
-    start_urls = ['https://f-droid.org/en/categories/graphics/']
+    # start_urls = ['https://f-droid.org/en/categories/graphics/']
     download_timeout = 1000
+
+    def __init__(self, url='', **kwargs):
+        self.start_urls = [f'{url}']
 
     def parse(self, response):
 
@@ -53,7 +56,7 @@ class FDroid(scrapy.Spider):
                 'source': source_code,
                 'date': release_date
             }
-            # yield scrapy.Request(response.urljoin(source_code + "/archive/master.zip"), callback=self.save_project)
+            yield scrapy.Request(response.urljoin(source_code + "/archive/master.zip"), callback=self.save_project)
 
     def save_project(self, response):
         if not os.path.exists('Projects'):

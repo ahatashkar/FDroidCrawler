@@ -37,13 +37,13 @@ plot_espresso = {}
 plot_robolectric = {}
 
 
-def analyze(dir):
+def analyse(dir):
     global has_junit, has_espresso, count_espresso, count_junit, lines_test, lines_code, has_robolectric, count_robolectric
 
     for each in os.listdir(dir):
         current = os.path.join(dir, each)
         if os.path.isdir(current):
-            analyze(current)
+            analyse(current)
 
         elif os.path.isfile(current):
             if '.java' in current or '.kt' in current:
@@ -146,7 +146,7 @@ for directory in os.listdir(root):
         lines_code = 0
         lines_test = 0
 
-        analyze('.')
+        analyse('.')
         if lines_code == 0:
             continue
 

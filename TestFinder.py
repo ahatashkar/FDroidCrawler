@@ -36,6 +36,13 @@ plot_junit = {}
 plot_espresso = {}
 plot_robolectric = {}
 
+release_list = {}
+release_list_test = {}
+release_list_junit = {}
+release_list_espresso = {}
+release_list_robolectric = {}
+release_list_lines = {}
+
 
 def analyse(dir):
     global has_junit, has_espresso, count_espresso, count_junit, lines_test, lines_code, has_robolectric, count_robolectric
@@ -181,6 +188,35 @@ for directory in os.listdir(root):
         total_count_robolectric = total_count_robolectric + count_robolectric
 
         if release_date != "":
+            if has_junit > 0 or has_espresso > 0 or has_robolectric > 0:
+                if release_list_test.get(release_date) is not None:
+                    release_list_test[release_date] = release_list_test[release_date] + 1
+                else:
+                    release_list_test[release_date] = 1
+
+            if release_list.get(release_date) is not None:
+                release_list[release_date] = release_list[release_date] + 1
+            else:
+                release_list[release_date] = 1
+
+            if has_junit > 0:
+                if release_list_junit.get(release_date) is not None:
+                    release_list_junit[release_date] = release_list_junit[release_date] + 1
+                else:
+                    release_list_junit[release_date] = 1
+
+            if has_espresso > 0:
+                if release_list_espresso.get(release_date) is not None:
+                    release_list_espresso[release_date] = release_list_espresso[release_date] + 1
+                else:
+                    release_list_espresso[release_date] = 1
+
+            if has_robolectric > 0:
+                if release_list_robolectric.get(release_date) is not None:
+                    release_list_robolectric[release_date] = release_list_robolectric[release_date] + 1
+                else:
+                    release_list_robolectric[release_date] = 1
+
             if plot_junit.get(release_date) is not None:
                 plot_junit[release_date] = plot_junit[release_date] + count_junit
             else:
@@ -195,6 +231,12 @@ for directory in os.listdir(root):
                 plot_robolectric[release_date] = plot_robolectric[release_date] + count_robolectric
             else:
                 plot_robolectric[release_date] = count_robolectric
+
+            test_ratio = lines_test / lines_code
+            if release_list_lines.get(release_date) is not None:
+                release_list_lines[release_date] = release_list_lines[release_date] + test_ratio
+            else:
+                release_list_lines[release_date] = test_ratio
 
         print(directory + ',' +
               release_date + ',' +
@@ -222,6 +264,40 @@ print('espresso & robolectric:,' + str(espresso_robolectric))
 print('total count junit:,' + str(total_count_junit))
 print('total count espresso:,' + str(total_count_espresso))
 print('total count robolectric:,' + str(total_count_robolectric))
+print('----------------------------')
+print('year,projects,has test,has junit,has espresso,has robolectric,test line ratio')
+release_list = sorted(release_list.items(), key=lambda t: t[0])
+
+for item in release_list:
+    year = item[0]
+    projects = item[1]
+
+    if release_list_test.get(year) is None:
+        has_test = 0
+    else:
+        has_test = release_list_test.get(year)
+
+    if release_list_junit.get(year) is None:
+        has_junit = 0
+    else:
+        has_junit = release_list_junit.get(year)
+
+    if release_list_espresso.get(year) is None:
+        has_espresso = 0
+    else:
+        has_espresso = release_list_espresso.get(year)
+
+    if release_list_robolectric.get(year) is None:
+        has_robolectric = 0
+    else:
+        has_robolectric = release_list_robolectric.get(year)
+
+    if release_list_lines.get(year) is None:
+        line_ratio = 0
+    elif int(projects) > 0:
+        line_ratio = release_list_lines.get(year) / float(projects)
+
+    print(year + ',' + str(projects) + ',' + str(has_test) + ',' + str(has_junit) + ',' + str(has_espresso) + ',' + str(has_robolectric) + ',' + str(line_ratio))
 
 category_name = ''
 if sys.argv.__len__() > 1:
@@ -229,6 +305,7 @@ if sys.argv.__len__() > 1:
     category_name = arg.split('/')[-2]
 
 plot_junit = sorted(plot_junit.items(), key=lambda t: t[0])
+
 x, y = zip(*plot_junit)
 plt.plot(x, y, label='junit')
 

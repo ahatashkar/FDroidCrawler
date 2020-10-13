@@ -208,23 +208,25 @@ for directory in os.listdir(root):
               str(lines_test))
 
 print('----------------------------')
-print('total projects: ' + str(total))
-print('total test: ' + str(total_test))
-print('total junit: ' + str(total_junit))
-print('total espresso: ' + str(total_espresso))
-print('total robolectric: ' + str(total_robolectric))
-print('only junit: ' + str(only_junit))
-print('only espresso: ' + str(only_espresso))
-print('only robolectric: ' + str(only_robolectric))
-print('junit & espresso: ' + str(junit_espresso))
-print('junit & robolectric: ' + str(junit_robolectric))
-print('espresso & robolectric: ' + str(espresso_robolectric))
-print('total count junit: ' + str(total_count_junit))
-print('total count espresso: ' + str(total_count_espresso))
-print('total count robolectric: ' + str(total_count_robolectric))
+print('total projects:,' + str(total))
+print('total test:,' + str(total_test))
+print('total junit:,' + str(total_junit))
+print('total espresso:,' + str(total_espresso))
+print('total robolectric:,' + str(total_robolectric))
+print('only junit:,' + str(only_junit))
+print('only espresso:,' + str(only_espresso))
+print('only robolectric:,' + str(only_robolectric))
+print('junit & espresso:,' + str(junit_espresso))
+print('junit & robolectric:,' + str(junit_robolectric))
+print('espresso & robolectric:,' + str(espresso_robolectric))
+print('total count junit:,' + str(total_count_junit))
+print('total count espresso:,' + str(total_count_espresso))
+print('total count robolectric:,' + str(total_count_robolectric))
 
-arg = sys.argv[1]
-category_name = arg.split('/')[-2]
+category_name = ''
+if sys.argv.__len__() > 1:
+    arg = sys.argv[1]
+    category_name = arg.split('/')[-2]
 
 plot_junit = sorted(plot_junit.items(), key=lambda t: t[0])
 x, y = zip(*plot_junit)

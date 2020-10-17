@@ -265,7 +265,7 @@ print('total count junit:,' + str(total_count_junit))
 print('total count espresso:,' + str(total_count_espresso))
 print('total count robolectric:,' + str(total_count_robolectric))
 print('----------------------------')
-print('year,projects,has test,has junit,has espresso,has robolectric,test line ratio')
+print('year,projects,has test,has junit,has espresso,has robolectric,test line ratio,has test ratio')
 release_list = sorted(release_list.items(), key=lambda t: t[0])
 
 for item in release_list:
@@ -297,7 +297,14 @@ for item in release_list:
     elif int(projects) > 0:
         line_ratio = release_list_lines.get(year) / float(projects)
 
-    print(year + ',' + str(projects) + ',' + str(has_test) + ',' + str(has_junit) + ',' + str(has_espresso) + ',' + str(has_robolectric) + ',' + str(line_ratio))
+    print(year + ',' +
+          str(projects) + ',' +
+          str(has_test) + ',' +
+          str(has_junit) + ',' +
+          str(has_espresso) + ',' +
+          str(has_robolectric) + ',' +
+          str(line_ratio) + ',' +
+          str(has_test/projects))
 
 category_name = ''
 if sys.argv.__len__() > 1:

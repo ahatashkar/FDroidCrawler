@@ -42,6 +42,8 @@ release_list_junit = {}
 release_list_espresso = {}
 release_list_robolectric = {}
 release_list_lines = {}
+release_list_line_code = {}
+release_list_line_test = {}
 
 
 def analyse(dir):
@@ -238,6 +240,16 @@ for directory in os.listdir(root):
             else:
                 release_list_lines[release_date] = test_ratio
 
+            if release_list_line_code.get(release_date) is not None:
+                release_list_line_code[release_date] = release_list_line_code[release_date] + lines_code
+            else:
+                release_list_line_code[release_date] = lines_code
+
+            if release_list_line_test.get(release_date) is not None:
+                release_list_line_test[release_date] = release_list_line_test[release_date] + lines_test
+            else:
+                release_list_line_test[release_date] = lines_test
+
         print(directory + ',' +
               release_date + ',' +
               str(has_junit) + ',' +
@@ -265,7 +277,7 @@ print('total count junit:,' + str(total_count_junit))
 print('total count espresso:,' + str(total_count_espresso))
 print('total count robolectric:,' + str(total_count_robolectric))
 print('----------------------------')
-print('year,projects,has test,has junit,has espresso,has robolectric,test line ratio,has test ratio')
+print('year,projects,has test,has junit,has espresso,has robolectric,lines code,lines test')
 release_list = sorted(release_list.items(), key=lambda t: t[0])
 
 for item in release_list:
@@ -295,7 +307,17 @@ for item in release_list:
     if release_list_lines.get(year) is None:
         line_ratio = 0
     elif int(projects) > 0:
-        line_ratio = release_list_lines.get(year) / float(projects)
+        line_ratio = release_list_lines.get(year)
+
+    if release_list_line_code.get(year) is None:
+        line_code = 0
+    else:
+        line_code = release_list_line_code.get(year)
+
+    if release_list_line_test.get(year) is None:
+        line_test = 0
+    else:
+        line_test = release_list_line_test.get(year)
 
     print(year + ',' +
           str(projects) + ',' +
@@ -303,28 +325,28 @@ for item in release_list:
           str(has_junit) + ',' +
           str(has_espresso) + ',' +
           str(has_robolectric) + ',' +
-          str(line_ratio) + ',' +
-          str(has_test/projects))
+          str(line_code) + ',' +
+          str(line_test))
 
-category_name = ''
-if sys.argv.__len__() > 1:
-    arg = sys.argv[1]
-    category_name = arg.split('/')[-2]
-
-plot_junit = sorted(plot_junit.items(), key=lambda t: t[0])
-
-x, y = zip(*plot_junit)
-plt.plot(x, y, label='junit')
-
-plot_espresso = sorted(plot_espresso.items(), key=lambda t: t[0])
-x, y = zip(*plot_espresso)
-plt.plot(x, y, label='espresso')
-
-plot_robolectric = sorted(plot_robolectric.items(), key=lambda t: t[0])
-x, y = zip(*plot_robolectric)
-plt.plot(x, y, label='robolectric')
-plt.legend(loc='best')
-plt.ylabel('Test cases')
-plt.xlabel('Years')
-plt.title(category_name)
-plt.savefig(output_path+"/plot_"+category_name+".jpg")
+# category_name = ''
+# if sys.argv.__len__() > 1:
+#     arg = sys.argv[1]
+#     category_name = arg.split('/')[-2]
+#
+# plot_junit = sorted(plot_junit.items(), key=lambda t: t[0])
+#
+# x, y = zip(*plot_junit)
+# plt.plot(x, y, label='junit')
+#
+# plot_espresso = sorted(plot_espresso.items(), key=lambda t: t[0])
+# x, y = zip(*plot_espresso)
+# plt.plot(x, y, label='espresso')
+#
+# plot_robolectric = sorted(plot_robolectric.items(), key=lambda t: t[0])
+# x, y = zip(*plot_robolectric)
+# plt.plot(x, y, label='robolectric')
+# plt.legend(loc='best')
+# plt.ylabel('Test cases')
+# plt.xlabel('Years')
+# plt.title(category_name)
+# plt.savefig(output_path+"/plot_"+category_name+".jpg")
